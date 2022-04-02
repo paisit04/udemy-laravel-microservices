@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use \Services\UserService;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
+use App\Models\Order;
 use App\Http\Requests\UpdatePasswordRequest;
-use App\Http\Requests\UpdateInfoRequest;
 
+use App\Http\Requests\UpdateInfoRequest;
 use App\Http\Requests\RegisterRequest;
 
 class AuthController extends Controller
