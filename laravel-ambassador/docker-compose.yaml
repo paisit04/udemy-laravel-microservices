@@ -28,13 +28,6 @@ services:
     networks:
       - default
 
-  redis:
-    image: redis
-    ports:
-      - 6379:6379
-    networks:
-      - default
-
 networks:
   users:
     external:
