@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\UserService;
 use App\Models\LinkProduct;
 use App\Models\Link;
+use App\Jobs\LinkCreated;
 
 use App\Http\Resources\LinkResource;
 
@@ -34,24 +35,22 @@ class LinkController extends Controller
             'code' => Str::random(6)
         ]);
 
+        $linkProducts = [];
+
         foreach ($request->input('products') as $product_id) {
-            LinkProduct::create([
+            $linkProduct = LinkProduct::create([
                 'link_id' => $link->id,
                 'product_id' => $product_id
             ]);
+
+            $linkProducts[] = $linkProduct->toArray();
         }
 
-        return $link;
-    }
+        $array = $link->toArray();
+        $array['link_products'] = $linkProducts;
 
-    public function show($code)
-    {
-        $link =  Link::with('user', 'products')->where('code', $code)->first();
+        LinkCreated::dispatch($array)->onQueue('checkout_topic');
 
-        $user = $this->userService->get("users/{$link->user_id}");
-
-        $link['user'] = $user;
-    
         return $link;
     }
 }
